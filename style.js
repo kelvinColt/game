@@ -78,7 +78,7 @@ function generateObstacle() {
             x: canvas.width,
             y: 0,
             width: 40,
-            height: 60,
+            height: 40,
             speed: 6 * gameSpeed, // Скорость зависит от общей скорости игры
             type: 'asteroid',
             image: asteroidImage
