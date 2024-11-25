@@ -1,11 +1,11 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Устанавливаем размер канваса
+// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЂР°Р·РјРµСЂ РєР°РЅРІР°СЃР°
 canvas.width = 800;
 canvas.height = 400;
 
-// Игровые переменные
+// РРіСЂРѕРІС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 let astronaut = {
     x: 50,
     y: canvas.height - 60,
@@ -18,135 +18,135 @@ let astronaut = {
     jumpHeight: 0,
     image: new Image()
 };
-astronaut.image.src = 'astronaut.png';  // Путь к изображению космонавта
+astronaut.image.src = 'astronaut.png';  // РџСѓС‚СЊ Рє РёР·РѕР±СЂР°Р¶РµРЅРёСЋ РєРѕСЃРјРѕРЅР°РІС‚Р°
 
-// Фон
+// Р¤РѕРЅ
 let backgroundImage = new Image();
-backgroundImage.src = 'space-background.jpg';  // Путь к изображению фона (космос)
+backgroundImage.src = 'space-background.jpg';  // РџСѓС‚СЊ Рє РёР·РѕР±СЂР°Р¶РµРЅРёСЋ С„РѕРЅР° (РєРѕСЃРјРѕСЃ)
 
-// Лунная поверхность (платформа)
+// Р›СѓРЅРЅР°СЏ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ (РїР»Р°С‚С„РѕСЂРјР°)
 let platformImage = new Image();
-platformImage.src = 'moon-surface.png';  // Путь к изображению лунной поверхности
+platformImage.src = 'moon-surface.png';  // РџСѓС‚СЊ Рє РёР·РѕР±СЂР°Р¶РµРЅРёСЋ Р»СѓРЅРЅРѕР№ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё
 
 let obstacles = [];
 let score = 0;
 let gameOver = false;
 
-// Изображения препятствий
+// РР·РѕР±СЂР°Р¶РµРЅРёСЏ РїСЂРµРїСЏС‚СЃС‚РІРёР№
 let asteroidImage = new Image();
 let alienImage = new Image();
-asteroidImage.src = 'asteroid.png';  // Путь к изображению астероида
-alienImage.src = 'alien.png';        // Путь к изображению инопланетянина
+asteroidImage.src = 'asteroid.png';  // РџСѓС‚СЊ Рє РёР·РѕР±СЂР°Р¶РµРЅРёСЋ Р°СЃС‚РµСЂРѕРёРґР°
+alienImage.src = 'alien.png';        // РџСѓС‚СЊ Рє РёР·РѕР±СЂР°Р¶РµРЅРёСЋ РёРЅРѕРїР»Р°РЅРµС‚СЏРЅРёРЅР°
 
-// Количество кликов
+// РљРѕР»РёС‡РµСЃС‚РІРѕ РєР»РёРєРѕРІ
 let clickCount = 0;
 
-// Начальная скорость игры
+// РќР°С‡Р°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РёРіСЂС‹
 let gameSpeed = 1;
 
-// Управление через кнопки на экране
+// РЈРїСЂР°РІР»РµРЅРёРµ С‡РµСЂРµР· РєРЅРѕРїРєРё РЅР° СЌРєСЂР°РЅРµ
 document.getElementById('upBtn').addEventListener('click', () => astronaut.dy = -astronaut.speed);
 document.getElementById('downBtn').addEventListener('click', () => astronaut.dy = astronaut.speed);
 
-// Функция для сброса направления
+// Р¤СѓРЅРєС†РёСЏ РґР»СЏ СЃР±СЂРѕСЃР° РЅР°РїСЂР°РІР»РµРЅРёСЏ
 document.addEventListener('mouseup', () => astronaut.dy = 0);
 
-// Обработчик кликов для прыжка
+// РћР±СЂР°Р±РѕС‚С‡РёРє РєР»РёРєРѕРІ РґР»СЏ РїСЂС‹Р¶РєР°
 canvas.addEventListener('click', () => {
     clickCount++;
     if (clickCount == 1) {
-        astronaut.dy = -7;  // Небольшой прыжок
-        astronaut.jumpHeight = 100;  // Определяем высоту первого прыжка
+        astronaut.dy = -7;  // РќРµР±РѕР»СЊС€РѕР№ РїСЂС‹Р¶РѕРє
+        astronaut.jumpHeight = 100;  // РћРїСЂРµРґРµР»СЏРµРј РІС‹СЃРѕС‚Сѓ РїРµСЂРІРѕРіРѕ РїСЂС‹Р¶РєР°
     } else if (clickCount == 2) {
-        astronaut.dy = -12;  // Большой прыжок
-        astronaut.jumpHeight = 200;  // Высота второго прыжка
+        astronaut.dy = -12;  // Р‘РѕР»СЊС€РѕР№ РїСЂС‹Р¶РѕРє
+        astronaut.jumpHeight = 200;  // Р’С‹СЃРѕС‚Р° РІС‚РѕСЂРѕРіРѕ РїСЂС‹Р¶РєР°
     }
 
-    // Сброс счётчика кликов после 2-х
+    // РЎР±СЂРѕСЃ СЃС‡С‘С‚С‡РёРєР° РєР»РёРєРѕРІ РїРѕСЃР»Рµ 2-С…
     if (clickCount > 2) {
         clickCount = 0;
     }
 });
 
-// Генерация препятствий
+// Р“РµРЅРµСЂР°С†РёСЏ РїСЂРµРїСЏС‚СЃС‚РІРёР№
 function generateObstacle() {
-    const isAsteroid = Math.random() < 0.5;  // 50% шанс, что будет астероида или инопланетянин
+    const isAsteroid = Math.random() < 0.5;  // 50% С€Р°РЅСЃ, С‡С‚Рѕ Р±СѓРґРµС‚ Р°СЃС‚РµСЂРѕРёРґР° РёР»Рё РёРЅРѕРїР»Р°РЅРµС‚СЏРЅРёРЅ
 
     if (isAsteroid) {
-        // Генерация астероидов, которые двигаются по диагонали
+        // Р“РµРЅРµСЂР°С†РёСЏ Р°СЃС‚РµСЂРѕРёРґРѕРІ, РєРѕС‚РѕСЂС‹Рµ РґРІРёРіР°СЋС‚СЃСЏ РїРѕ РґРёР°РіРѕРЅР°Р»Рё
         obstacles.push({
             x: canvas.width,
             y: 0,
             width: 40,
-            height: 40,
-            speed: 3 * gameSpeed, // Скорость зависит от общей скорости игры
+            height: 60,
+            speed: 6 * gameSpeed, // РЎРєРѕСЂРѕСЃС‚СЊ Р·Р°РІРёСЃРёС‚ РѕС‚ РѕР±С‰РµР№ СЃРєРѕСЂРѕСЃС‚Рё РёРіСЂС‹
             type: 'asteroid',
             image: asteroidImage
         });
     } else {
-        // Генерация инопланетян, которые двигаются сбоку
+        // Р“РµРЅРµСЂР°С†РёСЏ РёРЅРѕРїР»Р°РЅРµС‚СЏРЅ, РєРѕС‚РѕСЂС‹Рµ РґРІРёРіР°СЋС‚СЃСЏ СЃР±РѕРєСѓ
         obstacles.push({
             x: canvas.width,
-            y: Math.random() * (canvas.height - 40), // Случайное положение по вертикали
+            y: Math.random() * (canvas.height - 40), // РЎР»СѓС‡Р°Р№РЅРѕРµ РїРѕР»РѕР¶РµРЅРёРµ РїРѕ РІРµСЂС‚РёРєР°Р»Рё
             width: 40,
             height: 40,
-            speed: 3 * gameSpeed, // Скорость зависит от общей скорости игры
+            speed: 10 * gameSpeed, // РЎРєРѕСЂРѕСЃС‚СЊ Р·Р°РІРёСЃРёС‚ РѕС‚ РѕР±С‰РµР№ СЃРєРѕСЂРѕСЃС‚Рё РёРіСЂС‹
             type: 'alien',
             image: alienImage
         });
     }
 }
 
-// Функция обновления состояния игры
+// Р¤СѓРЅРєС†РёСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ РёРіСЂС‹
 function updateGame() {
     if (gameOver) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Отображаем фон (космос)
+    // РћС‚РѕР±СЂР°Р¶Р°РµРј С„РѕРЅ (РєРѕСЃРјРѕСЃ)
     ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
-    // Отображаем лунную поверхность
-    ctx.drawImage(platformImage, 0, canvas.height - 50, canvas.width, 50);  // Платформа внизу
+    // РћС‚РѕР±СЂР°Р¶Р°РµРј Р»СѓРЅРЅСѓСЋ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ
+    ctx.drawImage(platformImage, 0, canvas.height - 50, canvas.width, 50);  // РџР»Р°С‚С„РѕСЂРјР° РІРЅРёР·Сѓ
 
-    // Двигаем космонавта
+    // Р”РІРёРіР°РµРј РєРѕСЃРјРѕРЅР°РІС‚Р°
     astronaut.y += astronaut.dy;
-    astronaut.dy += astronaut.gravity;  // Применяем гравитацию
+    astronaut.dy += astronaut.gravity;  // РџСЂРёРјРµРЅСЏРµРј РіСЂР°РІРёС‚Р°С†РёСЋ
 
-    // Ограничиваем движение по вертикали
+    // РћРіСЂР°РЅРёС‡РёРІР°РµРј РґРІРёР¶РµРЅРёРµ РїРѕ РІРµСЂС‚РёРєР°Р»Рё
     if (astronaut.y < 0) astronaut.y = 0;
     if (astronaut.y + astronaut.height > canvas.height - 50) {
         astronaut.y = canvas.height - 50 - astronaut.height;
-        astronaut.dy = 0;  // Космонавт падает на платформу и останавливается
+        astronaut.dy = 0;  // РљРѕСЃРјРѕРЅР°РІС‚ РїР°РґР°РµС‚ РЅР° РїР»Р°С‚С„РѕСЂРјСѓ Рё РѕСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ
     }
 
-    // Отображаем космонавта
+    // РћС‚РѕР±СЂР°Р¶Р°РµРј РєРѕСЃРјРѕРЅР°РІС‚Р°
     ctx.drawImage(astronaut.image, astronaut.x, astronaut.y, astronaut.width, astronaut.height);
 
-    // Генерируем препятствия с уменьшенной вероятностью
-    if (Math.random() < 0.006) {  // Вероятность появления астероида уменьшена в 3 раза
+    // Р“РµРЅРµСЂРёСЂСѓРµРј РїСЂРµРїСЏС‚СЃС‚РІРёСЏ СЃ СѓРјРµРЅСЊС€РµРЅРЅРѕР№ РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊСЋ
+    if (Math.random() < 0.006) {  // Р’РµСЂРѕСЏС‚РЅРѕСЃС‚СЊ РїРѕСЏРІР»РµРЅРёСЏ Р°СЃС‚РµСЂРѕРёРґР° СѓРјРµРЅСЊС€РµРЅР° РІ 3 СЂР°Р·Р°
         generateObstacle();
     }
 
-    // Обновляем препятствия
+    // РћР±РЅРѕРІР»СЏРµРј РїСЂРµРїСЏС‚СЃС‚РІРёСЏ
     obstacles.forEach((obstacle, index) => {
-        // Метеориты двигаются по диагонали с верхнего правого угла в нижний левый угол
+        // РњРµС‚РµРѕСЂРёС‚С‹ РґРІРёРіР°СЋС‚СЃСЏ РїРѕ РґРёР°РіРѕРЅР°Р»Рё СЃ РІРµСЂС…РЅРµРіРѕ РїСЂР°РІРѕРіРѕ СѓРіР»Р° РІ РЅРёР¶РЅРёР№ Р»РµРІС‹Р№ СѓРіРѕР»
         if (obstacle.type === 'asteroid') {
-            obstacle.x -= obstacle.speed;  // Астероид двигается влево
-            obstacle.y += obstacle.speed;  // Астероид падает вниз
+            obstacle.x -= obstacle.speed;  // РђСЃС‚РµСЂРѕРёРґ РґРІРёРіР°РµС‚СЃСЏ РІР»РµРІРѕ
+            obstacle.y += obstacle.speed;  // РђСЃС‚РµСЂРѕРёРґ РїР°РґР°РµС‚ РІРЅРёР·
         } else if (obstacle.type === 'alien') {
-            obstacle.x -= obstacle.speed;  // Инопланетянин движется сбоку
+            obstacle.x -= obstacle.speed;  // РРЅРѕРїР»Р°РЅРµС‚СЏРЅРёРЅ РґРІРёР¶РµС‚СЃСЏ СЃР±РѕРєСѓ
         }
 
         ctx.drawImage(obstacle.image, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
 
-        // Удаляем препятствия, которые вышли за пределы экрана
+        // РЈРґР°Р»СЏРµРј РїСЂРµРїСЏС‚СЃС‚РІРёСЏ, РєРѕС‚РѕСЂС‹Рµ РІС‹С€Р»Рё Р·Р° РїСЂРµРґРµР»С‹ СЌРєСЂР°РЅР°
         if (obstacle.x + obstacle.width < 0 || obstacle.y > canvas.height) {
             obstacles.splice(index, 1);
             score += 10;
         }
 
-        // Проверка на столкновение с препятствием
+        // РџСЂРѕРІРµСЂРєР° РЅР° СЃС‚РѕР»РєРЅРѕРІРµРЅРёРµ СЃ РїСЂРµРїСЏС‚СЃС‚РІРёРµРј
         if (astronaut.x < obstacle.x + obstacle.width &&
             astronaut.x + astronaut.width > obstacle.x &&
             astronaut.y < obstacle.y + obstacle.height &&
@@ -157,28 +157,28 @@ function updateGame() {
         }
     });
 
-    // Отображаем счет
+    // РћС‚РѕР±СЂР°Р¶Р°РµРј СЃС‡РµС‚
     ctx.fillStyle = 'white';
     ctx.font = '20px Arial';
     ctx.fillText('Score: ' + score, 10, 30);
 
-    // Постепенно увеличиваем скорость игры
-    if (gameSpeed < 2) { // Максимальная скорость игры
+    // РџРѕСЃС‚РµРїРµРЅРЅРѕ СѓРІРµР»РёС‡РёРІР°РµРј СЃРєРѕСЂРѕСЃС‚СЊ РёРіСЂС‹
+    if (gameSpeed < 2) { // РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РёРіСЂС‹
         gameSpeed += 0.0005;
     }
 
     requestAnimationFrame(updateGame);
 }
 
-// Функция сброса игры
+// Р¤СѓРЅРєС†РёСЏ СЃР±СЂРѕСЃР° РёРіСЂС‹
 function resetGame() {
     astronaut.y = canvas.height - 60;
     astronaut.dy = 0;
     obstacles = [];
     score = 0;
     gameOver = false;
-    gameSpeed = 1;  // Сброс скорости игры
+    gameSpeed = 1;  // РЎР±СЂРѕСЃ СЃРєРѕСЂРѕСЃС‚Рё РёРіСЂС‹
 }
 
-// Начало игры
+// РќР°С‡Р°Р»Рѕ РёРіСЂС‹
 updateGame();
